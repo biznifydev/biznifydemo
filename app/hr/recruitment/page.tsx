@@ -1607,7 +1607,7 @@ export default function RecruitmentPage() {
                         <div className={`p-4 ${stage.color} border-b border-gray-200`}>
                           <div className="flex items-center justify-between">
                             <h3 className="font-semibold text-gray-900 text-sm">
-                              {stage.title}
+                              {stage.name}
                             </h3>
                             <span className="bg-white text-gray-600 text-xs font-medium px-2 py-1 rounded-full">
                               {stageCandidates.length}
