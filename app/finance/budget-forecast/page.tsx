@@ -1666,7 +1666,6 @@ export default function FinancialPlanningPage() {
     <ProtectedRoute>
       <PageWrapper 
         title="Financial Planning" 
-        description="Manage budgets, forecasts, and financial analysis"
         headerButtons={getHeaderButtons()}
         subHeader={
           <SubHeader 
