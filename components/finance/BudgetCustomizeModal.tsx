@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Plus, Edit2, Trash2, X } from 'lucide-react'
-import { BudgetCategory } from '@/lib/services/budgetService'
+import { BudgetCategory } from '@/lib/types/budget'
 
 interface BudgetCustomizeModalProps {
   isOpen: boolean
