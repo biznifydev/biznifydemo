@@ -260,7 +260,7 @@ export default function LegalRequirementsPage() {
         suggestions.push(...suggestedRequirements["Employment"]);
       }
       
-      setSuggestedItems([...new Set(suggestions)]);
+      setSuggestedItems(Array.from(new Set(suggestions)));
     }
   };
 
