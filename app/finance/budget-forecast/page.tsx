@@ -1175,17 +1175,17 @@ export default function FinancialPlanningPage() {
               {(type === 'category' || type === 'subcategory') && editingCategory?.id === (type === 'category' ? categoryId : row.original.id) ? (
                 <input
                   type="text"
-                  value={editingCategory.name}
+                  value={editingCategory!.name}
                   onChange={(e) => setEditingCategory({ 
-                    id: editingCategory.id, 
+                    id: editingCategory!.id, 
                     name: e.target.value, 
-                    sectionId: editingCategory.sectionId,
-                    categoryId: editingCategory.categoryId 
+                    sectionId: editingCategory!.sectionId,
+                    categoryId: editingCategory!.categoryId 
                   })}
-                  onBlur={() => handleSaveCategoryName(type === 'category' ? categoryId! : row.original.id, editingCategory.name)}
+                  onBlur={() => handleSaveCategoryName(type === 'category' ? categoryId! : row.original.id, editingCategory!.name)}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      handleSaveCategoryName(type === 'category' ? categoryId! : row.original.id, editingCategory.name);
+                      handleSaveCategoryName(type === 'category' ? categoryId! : row.original.id, editingCategory!.name);
                     }
                   }}
                   onKeyDown={(e) => {
