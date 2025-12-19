@@ -1947,7 +1947,15 @@ export default function FinancialPlanningPage() {
       <SavedBudgetsDrawer
         isOpen={isSavedBudgetsOpen}
         onClose={() => setIsSavedBudgetsOpen(false)}
-        budgets={budgets}
+        budgets={budgets.map(budget => ({
+          id: budget.id,
+          name: budget.name,
+          description: budget.description,
+          year: budget.fiscal_year,
+          status: budget.status === 'live' ? 'locked' as const : 'draft' as const,
+          created_at: budget.created_at,
+          updated_at: budget.updated_at
+        }))}
         onSelectBudget={async (budgetId) => {
           try {
             const budgetWithData = await BudgetService.getBudgetWithData(budgetId);
