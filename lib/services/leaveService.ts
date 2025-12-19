@@ -263,7 +263,8 @@ export class LeaveService {
 
     requests.forEach(request => {
       const employeeId = request.employee_id
-      const employeeName = request.user_profiles ? `${request.user_profiles.first_name} ${request.user_profiles.last_name}` : 'Unknown'
+      const userProfile = Array.isArray(request.user_profiles) ? request.user_profiles[0] : request.user_profiles
+      const employeeName = userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'Unknown'
 
       if (!employeeMap.has(employeeId)) {
         employeeMap.set(employeeId, {

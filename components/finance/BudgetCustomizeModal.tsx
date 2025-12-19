@@ -82,7 +82,7 @@ export function BudgetCustomizeModal({
     }
   }
 
-  const parentCategories = categories.filter(cat => !cat.parent_id)
+  const parentCategories = categories
 
   if (!isOpen) return null
 
@@ -204,14 +204,6 @@ export function BudgetCustomizeModal({
                       ) : (
                         <div className="flex items-center space-x-3">
                           <span className="font-medium text-gray-900">{category.name}</span>
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getTypeColor(category.type)}`}>
-                            {getTypeLabel(category.type)}
-                          </span>
-                          {category.parent_id && (
-                            <span className="text-sm text-gray-500">
-                              (Subcategory)
-                            </span>
-                          )}
                         </div>
                       )}
                     </div>

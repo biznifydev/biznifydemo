@@ -593,7 +593,7 @@ export class BudgetService {
 
   // Utility methods
   static async lockBudget(budgetId: string): Promise<Budget> {
-    return this.updateBudget(budgetId, { status: 'locked' });
+    return this.updateBudget(budgetId, { status: 'live' });
   }
 
   static async unlockBudget(budgetId: string): Promise<Budget> {

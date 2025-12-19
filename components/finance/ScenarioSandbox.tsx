@@ -85,7 +85,8 @@ export default function ScenarioSandbox({
 
         months.forEach(month => {
           if (dataType === 'budget') {
-            categoryOriginalValues[month] = category.monthly_totals?.[month.toLowerCase()] ?? 0;
+            const monthKey = month.toLowerCase() as keyof typeof category.monthly_totals;
+            categoryOriginalValues[month] = category.monthly_totals?.[monthKey] ?? 0;
           } else {
             // Get forecast value for this category and month
             const forecastEntry = selectedForecast?.forecast_entries?.find(entry => 
@@ -121,7 +122,8 @@ export default function ScenarioSandbox({
 
           months.forEach(month => {
             if (dataType === 'budget') {
-              subcategoryOriginalValues[month] = subcategory.monthly_totals?.[month.toLowerCase()] ?? 0;
+              const monthKey = month.toLowerCase() as keyof typeof subcategory.monthly_totals;
+              subcategoryOriginalValues[month] = subcategory.monthly_totals?.[monthKey] ?? 0;
             } else {
               // Get forecast value for this subcategory and month
               const forecastEntry = selectedForecast?.forecast_entries?.find(entry => 

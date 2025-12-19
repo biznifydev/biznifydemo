@@ -138,7 +138,7 @@ export class InvestmentService {
     if (error) throw error
     
     if (data) {
-      const total_invested = data.round_investors.reduce((sum, ri) => sum + ri.investment_amount, 0)
+      const total_invested = data.round_investors.reduce((sum: number, ri: typeof data.round_investors[0]) => sum + ri.investment_amount, 0)
       const rounds_count = data.round_investors.length
       return { ...data, total_invested, rounds_count }
     }
