@@ -432,6 +432,8 @@ export default function FinancialPlanningPage() {
 
   // Helper function to handle category editing (for categories without subcategories)
   const handleCategoryEdit = async (targetRow: BudgetRow, monthNumber: number, amount: number, isRecurring: boolean) => {
+    if (!currentBudget) return;
+    
     // For categories without subcategories, we need to create a subcategory first, then a budget item
     console.log('Editing category without subcategories:', targetRow.name);
     
