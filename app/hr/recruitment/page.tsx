@@ -1153,13 +1153,13 @@ export default function RecruitmentPage() {
       let content = ''
       switch (columnId) {
         case 'candidate':
-          content = `${item.candidate?.name || 'No name'} ${item.candidate?.position || ''}`
+          content = item.candidate ? `${item.candidate.first_name} ${item.candidate.last_name} ${item.candidate.position || ''}` : 'No name'
           break
         case 'job':
-          content = item.requisition?.title || 'No job title'
+          content = item.job_posting?.title || 'No job title'
           break
         case 'requisition':
-          content = item.requisition?.id || 'No ID'
+          content = item.job_posting?.id || 'No ID'
           break
         case 'interviewer':
           content = item.interviewer || 'No interviewer'
@@ -1489,8 +1489,14 @@ export default function RecruitmentPage() {
                           className="py-2 px-3 sticky left-10 bg-white z-10 border-r border-gray-200"
                         >
                           <div className="overflow-hidden leading-tight">
-                            <div className="font-medium text-gray-900 text-xs truncate block">{interview.candidate.name}</div>
-                            <div className="text-xs text-gray-500 truncate block">{interview.candidate.position}</div>
+                            <div className="font-medium text-gray-900 text-xs truncate block">
+                              {interview.candidate 
+                                ? ('first_name' in interview.candidate && 'last_name' in interview.candidate
+                                  ? `${interview.candidate.first_name} ${interview.candidate.last_name}`
+                                  : (interview.candidate as any).name || 'N/A')
+                                : 'N/A'}
+                            </div>
+                            <div className="text-xs text-gray-500 truncate block">{interview.candidate?.position || 'N/A'}</div>
                       </div>
                     </td>
                         <td 
@@ -1498,7 +1504,9 @@ export default function RecruitmentPage() {
                           className="py-2 px-3 border-r border-gray-200"
                         >
                           <div className="overflow-hidden leading-tight">
-                            <div className="text-xs text-gray-900 truncate block">{interview.requisition.title}</div>
+                            <div className="text-xs text-gray-900 truncate block">
+                              {(interview as any).job_posting?.title || (interview as any).requisition?.title || 'N/A'}
+                            </div>
                           </div>
                         </td>
                         <td 
@@ -1506,7 +1514,9 @@ export default function RecruitmentPage() {
                           className="py-2 px-3 border-r border-gray-200"
                         >
                           <div className="overflow-hidden leading-tight">
-                            <div className="text-xs text-gray-900 truncate block">{interview.requisition.id}</div>
+                            <div className="text-xs text-gray-900 truncate block">
+                              {(interview as any).job_posting?.id || (interview as any).requisition?.id || 'N/A'}
+                            </div>
                           </div>
                         </td>
                         <td 
@@ -2025,7 +2035,7 @@ export default function RecruitmentPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Submission Date</label>
-                    <p className="text-sm text-gray-900">{selectedCandidate.submissionDate}</p>
+                    <p className="text-sm text-gray-900">{selectedCandidate.created_at ? RecruitmentService.formatDate(selectedCandidate.created_at) : 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -2043,12 +2053,14 @@ export default function RecruitmentPage() {
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium text-purple-600">
-                        {selectedInterview.candidate.avatar}
+                        {selectedInterview.candidate ? RecruitmentService.generateAvatarInitials(selectedInterview.candidate.first_name, selectedInterview.candidate.last_name) : 'N/A'}
                       </span>
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">{selectedInterview.candidate.name}</h2>
-                      <p className="text-sm text-gray-600">{selectedInterview.type} - {selectedInterview.requisition.title}</p>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        {selectedInterview.candidate ? `${selectedInterview.candidate.first_name} ${selectedInterview.candidate.last_name}` : 'N/A'}
+                      </h2>
+                      <p className="text-sm text-gray-600">{selectedInterview.interview_type} - {selectedInterview.job_posting?.title || 'N/A'}</p>
                     </div>
                   </div>
                   <button
@@ -2082,17 +2094,19 @@ export default function RecruitmentPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Candidate</label>
-                      <p className="text-sm text-gray-900">{selectedInterview.candidate.name}</p>
-                      <p className="text-xs text-gray-500">{selectedInterview.candidate.position}</p>
+                      <p className="text-sm text-gray-900">
+                        {selectedInterview.candidate ? `${selectedInterview.candidate.first_name} ${selectedInterview.candidate.last_name}` : 'N/A'}
+                      </p>
+                      <p className="text-xs text-gray-500">{selectedInterview.candidate?.position || 'N/A'}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Interviewer</label>
-                      <p className="text-sm text-gray-900">{selectedInterview.interviewer}</p>
+                      <p className="text-sm text-gray-900">{selectedInterview.interviewer_name || (selectedInterview as any).interviewer || 'N/A'}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getInterviewTypeColor(selectedInterview.type)}`}>
-                        {selectedInterview.type}
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getInterviewTypeColor(selectedInterview.interview_type || (selectedInterview as any).type || '')}`}>
+                        {selectedInterview.interview_type || (selectedInterview as any).type || 'N/A'}
                       </span>
                     </div>
                     <div>
@@ -2103,11 +2117,20 @@ export default function RecruitmentPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                      <p className="text-sm text-gray-900">{formatInterviewDate(selectedInterview.date)}</p>
+                      <p className="text-sm text-gray-900">
+                        {selectedInterview.scheduled_date 
+                          ? formatInterviewDate(selectedInterview.scheduled_date)
+                          : (selectedInterview as any).date 
+                          ? formatInterviewDate((selectedInterview as any).date)
+                          : 'N/A'}
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
-                      <p className="text-sm text-gray-900">{selectedInterview.time} ({selectedInterview.duration})</p>
+                      <p className="text-sm text-gray-900">
+                        {selectedInterview.scheduled_time || (selectedInterview as any).time || 'N/A'} 
+                        ({selectedInterview.duration_minutes ? `${selectedInterview.duration_minutes} min` : (selectedInterview as any).duration || 'N/A'})
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
@@ -2115,8 +2138,8 @@ export default function RecruitmentPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Requisition</label>
-                      <p className="text-sm text-gray-900">{selectedInterview.requisition.title}</p>
-                      <p className="text-xs text-gray-500">ID: {selectedInterview.requisition.id}</p>
+                      <p className="text-sm text-gray-900">{selectedInterview.job_posting?.title || 'N/A'}</p>
+                      <p className="text-xs text-gray-500">ID: {selectedInterview.job_posting?.id || 'N/A'}</p>
                     </div>
                   </div>
 
@@ -2243,23 +2266,23 @@ export default function RecruitmentPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                        <p className="text-sm text-gray-900">{selectedJob.type}</p>
+                        <p className="text-sm text-gray-900">{selectedJob.employment_type || 'N/A'}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
-                        <p className="text-sm text-gray-900">{selectedJob.salary}</p>
+                        <p className="text-sm text-gray-900">{selectedJob.salary_range || 'N/A'}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Posted Date</label>
-                        <p className="text-sm text-gray-900">{new Date(selectedJob.postedDate).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-900">{selectedJob.posted_date ? new Date(selectedJob.posted_date).toLocaleDateString() : 'N/A'}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Closing Date</label>
-                        <p className="text-sm text-gray-900">{new Date(selectedJob.closingDate).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-900">{selectedJob.closing_date ? new Date(selectedJob.closing_date).toLocaleDateString() : 'N/A'}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Hiring Manager</label>
-                        <p className="text-sm text-gray-900">{selectedJob.hiringManager}</p>
+                        <p className="text-sm text-gray-900">{selectedJob.hiring_manager || 'N/A'}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Recruiter</label>
